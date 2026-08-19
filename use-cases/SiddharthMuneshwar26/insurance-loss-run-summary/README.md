@@ -117,7 +117,7 @@ test for that.
 
 ## What it produces
 
-`out/review.html` and `out/loss-run-review.docx`:
+`out/review.html` — and see the known defect below regarding the DOCX export:
 
 - **Summary by policy year** — claims, open count, paid, reserve, incurred, loss
   ratio, and which document each year's figures came from
@@ -184,6 +184,25 @@ Everything is fabricated. Meridian Cold Chain Logistics, Kestrel Mutual and
 Ardent Risk Partners do not exist, and no figure comes from any real claim,
 policy or company.
 
+## Known defect: the DOCX export returns the wrong document
+
+**`out/review.html` is correct and complete. `out/loss-run-review.docx` is not.**
+
+The app uploads the adjuster notes, application and correspondence to the
+session so the agent can read them for the correspondence section. Export then
+asks the session for "the document" — and returns the last file uploaded, not
+the review that was passed to the edit call as `document_html`. On the sample
+corpus the exported DOCX comes back containing the underwriting checklist.
+
+Everything upstream of the export is unaffected: the figures, the conflicts, the
+findings and the citations are all correct, and `out/summary.json` and
+`out/review.html` carry them. The defect is in how this build sequences upload
+against export, not in the analysis.
+
+The likely fix is to make the review itself the session document before editing,
+rather than passing it only as `document_html`. That needs live API calls to get
+right, so it is stated here rather than guessed at.
+
 ## Honest limits
 
 - **The carrier's own numbers are taken as given.** Each run is checked against
@@ -209,6 +228,8 @@ policy or company.
   early version flagged any two claims sharing a date and figure, which on a
   fleet account is coincidence rather than duplication. Found by the
   clean-corpus test, and the rule was fixed rather than the test.
+- **The DOCX export is broken**, as above. The HTML review is the working
+  deliverable.
 - **No coverage recommendation.** The app summarises and flags; it does not
   advise whether to write the risk, and the chat instruction forbids adding one.
 
