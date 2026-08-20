@@ -7,6 +7,8 @@ not, says *which stage* lost them.
 Built for the SuperDocs Round 2 task (assigned build: table fidelity
 benchmark, band S2, surfaces: API + export).
 
+> Built by Siddharth Muneshwar for the SuperDocs task.
+
 ## Run it
 
 ```bash
@@ -120,7 +122,7 @@ Actual spend is printed at the end of every run and reported at the top of
 ## Tests
 
 ```bash
-make test        # 19 tests, no API key, no network, no operations
+python -m pytest tests/ -q     # 26 tests, no API key, no network, no operations
 ```
 
 The tests do not assert that the fake returns what it was handed. The offline
